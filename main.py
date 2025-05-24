@@ -112,8 +112,8 @@ class BlackjackApp:
         # Draw background
         ui.draw_background()
         
-        # Draw bankroll info
-        ui.draw_bankroll_info(game.bankroll, game.current_bet)
+        # Draw bankroll info with dynamic positioning
+        ui.draw_bankroll_info(game.bankroll, game.current_bet, game.is_betting_phase)
         
         # Draw based on game state
         if game.get_game_state() == GameState.GAME_OVER:

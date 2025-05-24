@@ -61,8 +61,8 @@ class GameUI:
         self.double_button = Button(310, WINDOW_HEIGHT - 100, 120, BUTTON_HEIGHT, "Double", BLUE)
         self.split_button = Button(440, WINDOW_HEIGHT - 100, 120, BUTTON_HEIGHT, "Split", BLUE)
         
-        # Control buttons
-        self.play_again_button = Button(WINDOW_WIDTH//2 - 100, WINDOW_HEIGHT//2 + 50, 
+        # Control buttons - moved play again button higher to avoid overlap with player hands
+        self.play_again_button = Button(WINDOW_WIDTH//2 - 100, WINDOW_HEIGHT//2 - 50, 
                                       BUTTON_WIDTH, BUTTON_HEIGHT, "Play Again", WHITE)
         
         # Betting buttons
@@ -80,17 +80,26 @@ class GameUI:
         """Draw the game background."""
         self.screen.fill(GREEN)
 
-    def draw_bankroll_info(self, bankroll: int, current_bet: int) -> None:
-        """Draw bankroll and bet information."""
+    def draw_bankroll_info(self, bankroll: int, current_bet: int, is_betting_phase: bool = False) -> None:
+        """Draw bankroll and bet information with dynamic positioning."""
         bankroll_text = self.font.render(f"Bankroll: ${bankroll}", True, WHITE)
         bet_text = self.font.render(f"Current Bet: ${current_bet}", True, WHITE)
-        self.screen.blit(bankroll_text, (WINDOW_WIDTH - 200, 20))
-        self.screen.blit(bet_text, (WINDOW_WIDTH - 200, 60))
+        
+        if is_betting_phase:
+            # Center the info during betting phase for better visibility
+            bankroll_rect = bankroll_text.get_rect(center=(WINDOW_WIDTH//2, 200))
+            bet_rect = bet_text.get_rect(center=(WINDOW_WIDTH//2, 240))
+            self.screen.blit(bankroll_text, bankroll_rect)
+            self.screen.blit(bet_text, bet_rect)
+        else:
+            # Top right position during gameplay
+            self.screen.blit(bankroll_text, (WINDOW_WIDTH - 200, 20))
+            self.screen.blit(bet_text, (WINDOW_WIDTH - 200, 60))
 
     def draw_betting_instructions(self) -> None:
         """Draw betting phase instructions."""
         instruction_text = self.font.render("Place your bet and click Deal Cards!", True, WHITE)
-        instruction_rect = instruction_text.get_rect(center=(WINDOW_WIDTH//2, 300))
+        instruction_rect = instruction_text.get_rect(center=(WINDOW_WIDTH//2, 320))
         self.screen.blit(instruction_text, instruction_rect)
 
     def draw_dealer_cards(self, dealer_hand: Hand, hide_first_card: bool) -> None:
@@ -214,11 +223,11 @@ class GameUI:
             parts = message.split(" | ")
             for i, part in enumerate(parts):
                 message_text = self.small_font.render(part, True, WHITE)
-                message_rect = message_text.get_rect(center=(WINDOW_WIDTH//2, WINDOW_HEIGHT//2 - 50 + i * 25))
+                message_rect = message_text.get_rect(center=(WINDOW_WIDTH//2, WINDOW_HEIGHT//2 - 120 + i * 25))
                 self.screen.blit(message_text, message_rect)
         else:
             message_text = self.font.render(message, True, WHITE)
-            message_rect = message_text.get_rect(center=(WINDOW_WIDTH//2, WINDOW_HEIGHT//2 - 50))
+            message_rect = message_text.get_rect(center=(WINDOW_WIDTH//2, WINDOW_HEIGHT//2 - 120))
             self.screen.blit(message_text, message_rect)
 
     def draw_game_over(self) -> None:

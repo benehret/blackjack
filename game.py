@@ -146,6 +146,9 @@ class BlackjackGame:
             current_hand.busted = True
             current_hand.finished = True
             self._next_hand()
+        elif current_hand.calculate_score() == 21:  # Add this line
+            current_hand.finished = True            # Add this line
+            self._next_hand()                       # Add this line
         elif current_hand.doubled:
             # After doubling, you get one card and hand is finished
             current_hand.finished = True
